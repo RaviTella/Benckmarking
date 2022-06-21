@@ -114,10 +114,6 @@
       "templateLink": {
         "uri": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/azuredeploy.json",
         "contentVersion": "1.0.0.0"
-      },
-      "parametersLink": {
-        "uri": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/parameter.json",
-        "contentVersion": "1.0.0.0"
       }
     }
   }
