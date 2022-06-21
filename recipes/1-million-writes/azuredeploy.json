@@ -25,6 +25,7 @@
         },
         "adminPassword": {
             "type": "string",
+             "defaultValue": "benchmarking",
             "metadata": {
                 "description": "Specifies a password for the Virtual Machine."
             }
