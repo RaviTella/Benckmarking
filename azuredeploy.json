@@ -2,15 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {},
-    "variables": {
-        "vNetName": "[concat(parameters('projectName'), '-vnet')]",
-        "vNetAddressPrefixes": "10.0.0.0/16", //is this required
-        "vNetSubnetAddressPrefix": "10.0.0.0/24",
-        "vmName": "[concat(parameters('projectName'), '-vm')]",
-        "publicIPAddressName": "[concat(parameters('projectName'), '-ip')]",
-        "networkInterfaceName": "[concat(parameters('projectName'), '-nic')]",
-        "networkSecurityGroupName": "[concat(parameters('projectName'), '-nsg')]"
-    },
+    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Network/networkSecurityGroups",

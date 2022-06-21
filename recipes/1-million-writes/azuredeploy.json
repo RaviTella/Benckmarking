@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-                "projectName": {
+        "projectName": {
             "type": "string",
             "defaultValue": "Benchmarking",
             "metadata": {
@@ -78,7 +78,7 @@
             "type": "int",
             "defaultValue": 1
         },
-		"ycsbOperationCount": {
+        "ycsbOperationCount": {
             "type": "int",
             "defaultValue": 1
         },
@@ -103,21 +103,29 @@
             "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/cloud-init.txt"
         }
     },
-    "variables": {},
-"resources": [
-  {
-    "type": "Microsoft.Resources/deployments",
-    "apiVersion": "2021-04-01",
-    "name": "linkedTemplate",
-    "properties": {
-      "mode": "Incremental",
-      "templateLink": {
-        "uri": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/azuredeploy.json",
-        "contentVersion": "1.0.0.0"
-      }
-    }
-  }
-],
+    "variables": {
+        "vNetName": "[concat(parameters('projectName'), '-vnet')]",
+        "vNetAddressPrefixes": "10.0.0.0/16", //is this required
+        "vNetSubnetAddressPrefix": "10.0.0.0/24",
+        "vmName": "[concat(parameters('projectName'), '-vm')]",
+        "publicIPAddressName": "[concat(parameters('projectName'), '-ip')]",
+        "networkInterfaceName": "[concat(parameters('projectName'), '-nic')]",
+        "networkSecurityGroupName": "[concat(parameters('projectName'), '-nsg')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "linkedTemplate",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/azuredeploy.json",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
+        }
+    ],
     "outputs": {
     }
-  }
+}
