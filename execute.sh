@@ -12,8 +12,14 @@ echo "##########MACHINE_INDEX###########: $MACHINE_INDEX"
 echo "##########YCSB_OPERATION_COUNT###########: $YCSB_OPERATION_COUNT"
 echo "##########VM_COUNT###########: $VM_COUNT"
 
+# ITEM_COUNT_FOR_WRITE is number of records to insert by each VM/client during load phase
+
+
+#The index of the record to start at during the Load
 insertstart=$((ITEM_COUNT_FOR_WRITE* (MACHINE_INDEX-1)))
+#Record cound for Load
 recordcount=$((ITEM_COUNT_FOR_WRITE* MACHINE_INDEX))
+# Record count for Run. Since we run read workload after load this is the total number of records loaded by all VMs/clients in the load phase.
 totalrecordcount=$((ITEM_COUNT_FOR_WRITE* VM_COUNT))
 
 
