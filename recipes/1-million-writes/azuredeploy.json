@@ -117,15 +117,12 @@
                 },
                 "parameters": {
                     "projectName": {
-                        "type": "string",
                         "value": "[parameters('projectName')]"
                     },
                     "location": {
-                        "type": "string",
                         "value": "[parameters('location')]"
                     },
                     "adminUsername": {
-                        "type": "string",
                         "value": "[parameters('adminUsername')]"
                     },
                     "adminPassword": {
