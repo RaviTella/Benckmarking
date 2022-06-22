@@ -1,8 +1,117 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {},
-    "variables": {},
+    "parameters": {
+        "projectName": {
+            "type": "string",
+            "defaultValue": "Benchmarking",
+            "metadata": {
+                "description": "Specifies a name for generating resource names."
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Specifies the location for all resources."
+            }
+        },
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "benchmarking",
+            "metadata": {
+                "description": "Specifies a username for the Virtual Machine."
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Specifies a password for the Virtual Machine."
+            }
+        },
+        "vmSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "resultsStorageSASURL": {
+            "type": "securestring",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "cosmosURI": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "cosmosKey": {
+            "type": "securestring",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "vmCount": {
+            "type": "int",
+            "defaultValue": 1
+        },
+        "workloadType": {
+            "type": "string",
+            "defaultValue": "workloadc"
+        },
+        "ycsbOperation": {
+            "type": "string",
+            "defaultValue": "load"
+        },
+        "threads": {
+            "type": "int",
+            "defaultValue": 1
+        },
+        "targetOperationsPerSecond": {
+            "type": "int",
+            "defaultValue": 2
+        },
+        "itemCountForWriteOps": {
+            "type": "int",
+            "defaultValue": 1
+        },
+		"ycsbOperationCount": {
+            "type": "int",
+            "defaultValue": 1
+        },
+        "ycsbGitRepositoryURL": {
+            "type": "string",
+            "defaultValue": "https://github.com/simplynaveen20/YCSB.git"
+        },
+        "ycsbGitBranchName": {
+            "type": "string",
+            "defaultValue": "addingDockerScripts"
+        },
+        "vmScriptExtensionScriptURL": {
+            "type": "string",
+            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/execute.sh"
+        },
+        "vmScriptExtensionScriptName": {
+            "type": "string",
+            "defaultValue": "execute.sh"
+        },
+        "cloudInit": {
+            "type": "string",
+            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/cloud-init.txt"
+        }
+    },
+    "variables": {
+        "vNetName": "[concat(parameters('projectName'), '-vnet')]",
+        "vNetAddressPrefixes": "10.0.0.0/16", //is this required
+        "vNetSubnetAddressPrefix": "10.0.0.0/24",
+        "vmName": "[concat(parameters('projectName'), '-vm')]",
+        "publicIPAddressName": "[concat(parameters('projectName'), '-ip')]",
+        "networkInterfaceName": "[concat(parameters('projectName'), '-nic')]",
+        "networkSecurityGroupName": "[concat(parameters('projectName'), '-nsg')]"
+    },
     "resources": [
         {
             "type": "Microsoft.Network/networkSecurityGroups",

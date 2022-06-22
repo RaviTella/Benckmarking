@@ -24,8 +24,7 @@
             }
         },
         "adminPassword": {
-            "type": "string",
-             "defaultValue": "benchmarking",
+            "type": "securestring",
             "metadata": {
                 "description": "Specifies a password for the Virtual Machine."
             }
@@ -123,6 +122,72 @@
                 "templateLink": {
                     "uri": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/azuredeploy.json",
                     "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "projectName": {
+                        "type": "string",
+                        "value": "[parameters('projectName')]"
+                    },
+                    "location": {
+                        "type": "string",
+                        "value": "[parameters('location')]"
+                    },
+                    "adminUsername": {
+                        "type": "string",
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "vmSize": {
+                        "value": "[parameters('vmSize')]"
+                    },
+                    "resultsStorageSASURL": {
+                        "value": "[parameters('resultsStorageSASURL')]"
+                    },
+                    "cosmosURI": {
+                        "value": "[parameters('cosmosURI')]"
+                    },
+                    "cosmosKey": {
+                        "value": "[parameters('cosmosKey')]"
+                    },
+                    "vmCount": {
+                        "value": "[parameters('vmCount')]"
+                    },
+                    "workloadType": {
+                        "value": "[parameters('workloadType')]"
+                    },
+                    "ycsbOperation": {
+                        "value": "[parameters('ycsbOperation')]"
+                    },
+                    "threads": {
+                        "value": "[parameters('threads')]"
+                    },
+                    "targetOperationsPerSecond": {
+                        "value": "[parameters('targetOperationsPerSecond')]"
+                    },
+                    "itemCountForWriteOps": {
+                        "value": "[parameters('itemCountForWriteOps')]"
+                    },
+                    "ycsbOperationCount": {
+                        "value": "[parameters('ycsbOperationCount')]"
+                    },
+                    "ycsbGitRepositoryURL": {
+                        "value": "[parameters('ycsbGitRepositoryURL')]"
+                    },
+                    "ycsbGitBranchName": {
+                        "value": "[parameters('ycsbGitBranchName')]"
+                    },
+                    "vmScriptExtensionScriptURL": {
+                        "value": "[parameters('vmScriptExtensionScriptURL')]"
+                    },
+                    "vmScriptExtensionScriptName": {
+                        "value": "[parameters('vmScriptExtensionScriptName')]"
+                    },
+                    "cloudInit": {
+                        "value": "[parameters('cloudInit')]"
+                    }
+
                 }
             }
         }
