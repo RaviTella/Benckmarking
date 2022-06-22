@@ -103,15 +103,7 @@
             "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/cloud-init.txt"
         }
     },
-    "variables": {
-        "vNetName": "[concat(parameters('projectName'), '-vnet')]",
-        "vNetAddressPrefixes": "10.0.0.0/16", //is this required
-        "vNetSubnetAddressPrefix": "10.0.0.0/24",
-        "vmName": "[concat(parameters('projectName'), '-vm')]",
-        "publicIPAddressName": "[concat(parameters('projectName'), '-ip')]",
-        "networkInterfaceName": "[concat(parameters('projectName'), '-nic')]",
-        "networkSecurityGroupName": "[concat(parameters('projectName'), '-nsg')]"
-    },
+    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
@@ -120,7 +112,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/azuredeploy.json",
+                    "uri": "https://raw.githubusercontent.com/RaviTella/Benckmarking/rt-linked-template/azuredeploy.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
