@@ -13,7 +13,7 @@ insertstart=$((ITEM_COUNT_FOR_WRITE* (MACHINE_INDEX-1)))
 # Records already in the DB + records to be added, during load 
 recordcount=$((ITEM_COUNT_FOR_WRITE* MACHINE_INDEX))
 # Record count for Run. Since we run read workload after load this is the total number of records loaded by all VMs/clients during load. 
-totalrecordcount=$((ITEM_COUNT_FOR_WRITE* VM_COUNT))OUNT_FOR_WRITE* VM_COUNT))
+totalrecordcount=$((ITEM_COUNT_FOR_WRITE* VM_COUNT))
 
 
 # Install Software
