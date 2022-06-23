@@ -33,316 +33,186 @@
             "type": "string",
             "defaultValue": "Standard_D2s_v3",
             "metadata": {
-                "description": "description"
+                "description": "Specifies a Virtual Machine size"
             }
         },
         "resultsStorageConnectionString": {
             "type": "securestring",
             "metadata": {
-                "description": "description"
+                "description": "Specifies a connection string of the storage account where results will be avaialble"
             }
         },
         "cosmosURI": {
             "type": "string",
             "metadata": {
-                "description": "description"
+                "description": "Specifies the URI of the Cosmos DB account"
             }
         },
         "cosmosKey": {
             "type": "securestring",
             "metadata": {
-                "description": "description"
+                "description": "Specifies the key for the Cosmos DB account"
             }
         },
         "vmCount": {
             "type": "int",
-            "defaultValue": 1
+            "defaultValue": 1,
+            "metadata": {
+                "description": "Specifies the number of Virtual Machines that will part of the test bench"
+            }
         },
         "workloadType": {
             "type": "string",
-            "defaultValue": "workloadc"
+            "defaultValue": "workloadc",
+            "metadata": {
+                "description": "Specifies the workload"
+            }
+
         },
         "ycsbOperation": {
             "type": "string",
-            "defaultValue": "load"
+            "defaultValue": "load",
+            "metadata": {
+                "description": "Specifies the operation"
+            }
+
         },
         "threads": {
             "type": "int",
-            "defaultValue": 1
+            "defaultValue": 0,
+            "metadata": {
+                "description": "Specifies the threads per client"
+            }
         },
         "targetOperationsPerSecond": {
             "type": "int",
-            "defaultValue": 0
+            "defaultValue": 2,
+            "metadata": {
+                "description": "Specifies the maximum number of operations per second"
+            }
         },
         "itemCountForWriteOps": {
             "type": "int",
             "defaultValue": 1
         },
-		"ycsbOperationCount": {
+        "ycsbOperationCount": {
             "type": "int",
             "defaultValue": 1
         },
         "ycsbGitRepositoryURL": {
             "type": "string",
-            "defaultValue": "https://github.com/simplynaveen20/YCSB.git"
+            "defaultValue": "https://github.com/simplynaveen20/YCSB.git",
+            "metadata": {
+                "description": "Specifies the GitHub Url for YCSB source code repository"
+            }
         },
         "ycsbGitBranchName": {
             "type": "string",
-            "defaultValue": "addingDockerScripts"
+            "defaultValue": "addingDockerScripts",
+            "metadata": {
+                "description": "Specifies the GitHub branch for YCSB source code repository"
+            }
         },
         "vmScriptExtensionScriptURL": {
             "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/execute.sh"
+            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/execute.sh",
+            "metadata": {
+                "description": "Specifies the url for the script that is executed by the Virtual Machine script extension"
+            }
         },
         "vmScriptExtensionScriptName": {
             "type": "string",
-            "defaultValue": "execute.sh"
+            "defaultValue": "execute.sh",
+            "metadata": {
+                "description": "Specifies the script extension name for the script that is executed by the Virtual Machine script extension"
+            }
         },
         "cloudInit": {
             "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/cloud-init.txt"
+            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/cloud-init.txt",
+            "metadata": {
+                "description": "Specifies the cloud-init file url"
+            }
         }
     },
-    "variables": {
-        "vNetName": "[concat(parameters('projectName'), '-vnet')]",
-        "vNetAddressPrefixes": "10.0.0.0/16", //is this required
-        "vNetSubnetAddressPrefix": "10.0.0.0/24",
-        "vmName": "[concat(parameters('projectName'), '-vm')]",
-        "publicIPAddressName": "[concat(parameters('projectName'), '-ip')]",
-        "networkInterfaceName": "[concat(parameters('projectName'), '-nic')]",
-        "networkSecurityGroupName": "[concat(parameters('projectName'), '-nsg')]"
-    },
+    "variables": {},
     "resources": [
         {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2020-11-01",
-            "name": "[variables('networkSecurityGroupName')]",
-            "location": "[parameters('location')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "linkedTemplate",
             "properties": {
-                "securityRules": [
-                    {
-                        "name": "SSH",
-                        "properties": {
-                            "protocol": "TCP",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "22",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 102,
-                            "direction": "Inbound",
-                            "sourcePortRanges": [],
-                            "destinationPortRanges": [],
-                            "sourceAddressPrefixes": [],
-                            "destinationAddressPrefixes": []
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2020-11-01",
-            "name": "[concat(variables('publicIPAddressName'),copyIndex(1))]",
-            "location": "[parameters('location')]",
-            "sku": {
-                "name": "Basic",
-                "tier": "Regional"
-            },
-            "properties": {
-                "publicIPAddressVersion": "IPv4",
-                "publicIPAllocationMethod": "Dynamic",
-                "idleTimeoutInMinutes": 4,
-                "ipTags": []
-            },
-            "copy": {
-                "name": "publicIPcopy",
-                "count": "[parameters('vmCount')]"
-            }
-
-        },
-        {
-            "type": "Microsoft.Network/virtualNetworks",
-            "apiVersion": "2020-11-01",
-            "name": "[variables('vNetName')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "addressSpace": {
-                    "addressPrefixes": [
-                        "[variables('vNetAddressPrefixes')]"
-                    ]
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/RaviTella/Benckmarking/users/ratella/cleanup/azuredeploy.json",
+                    "contentVersion": "1.0.0.0"
                 },
-                "subnets": [
-                    {
-                        "name": "default",
-                        "properties": {
-                            "addressPrefix": "[variables('vNetSubnetAddressPrefix')]",
-                            "delegations": [],
-                            "privateEndpointNetworkPolicies": "Enabled",
-                            "privateLinkServiceNetworkPolicies": "Enabled"
-                        }
-
-                    }
-                ],
-                "virtualNetworkPeerings": [],
-                "enableDdosProtection": false
-            }
-        },
-        {
-            "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2021-11-01",
-            "name": "[concat(variables('vmName'),copyIndex(1))]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('networkInterfaceName'),copyIndex(1)))]"
-            ],
-            "tags": {
-                "azsecpack": "prod",
-                "platformsettings.host_environment.service.platform_optedin_for_rootcerts": "true"
-            },
-            "properties": {
-                "hardwareProfile": {
-                    "vmSize": "[parameters('vmSize')]"
-                },
-                "storageProfile": {
-                    "imageReference": {
-                        "publisher": "canonical",
-                        "offer": "0001-com-ubuntu-server-focal",
-                        "sku": "20_04-lts-gen2",
-                        "version": "latest"
+                "parameters": {
+                    "projectName": {
+                        "value": "[parameters('projectName')]"
                     },
-                    "osDisk": {
-                        "osType": "Linux",
-                        "name": "[concat(variables('vmName'),copyIndex(1),'_OsDisk')]",
-                        "createOption": "FromImage",
-                        "caching": "ReadWrite",
-                        "managedDisk": {
-                            "storageAccountType": "Premium_LRS"
-                        },
-                        "deleteOption": "Delete",
-                        "diskSizeGB": 30
+                    "location": {
+                        "value": "[parameters('location')]"
                     },
-                    "dataDisks": []
-                },
-                "osProfile": {
-                    "computerName": "[concat(variables('vmName'),copyIndex(1))]",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]",
-                    "customData": "[base64(concat('#include\n',parameters('cloudInit')))]",
-                    "linuxConfiguration": {
-                        "disablePasswordAuthentication": false,
-                        "provisionVMAgent": true,
-                        "patchSettings": {
-                            "patchMode": "ImageDefault",
-                            "assessmentMode": "ImageDefault"
-                        }
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
                     },
-                    "secrets": [],
-                    "allowExtensionOperations": true
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('networkInterfaceName'),copyIndex(1)))]",
-                            "properties": {
-                                "deleteOption": "Delete"
-                            }
-                        }
-                    ]
-                },
-                "diagnosticsProfile": {
-                    "bootDiagnostics": {
-                        "enabled": true
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "vmSize": {
+                        "value": "[parameters('vmSize')]"
+                    },
+                    "resultsStorageConnectionString": {
+                        "value": "[parameters('resultsStorageConnectionString')]"
+                    },
+                    "cosmosURI": {
+                        "value": "[parameters('cosmosURI')]"
+                    },
+                    "cosmosKey": {
+                        "value": "[parameters('cosmosKey')]"
+                    },
+                    "vmCount": {
+                        "value": "[parameters('vmCount')]"
+                    },
+                    "workloadType": {
+                        "value": "[parameters('workloadType')]"
+                    },
+                    "ycsbOperation": {
+                        "value": "[parameters('ycsbOperation')]"
+                    },
+                    "threads": {
+                        "value": "[parameters('threads')]"
+                    },
+                    "targetOperationsPerSecond": {
+                        "value": "[parameters('targetOperationsPerSecond')]"
+                    },
+                    "itemCountForWriteOps": {
+                        "value": "[parameters('itemCountForWriteOps')]"
+                    },
+                    "ycsbOperationCount": {
+                        "value": "[parameters('ycsbOperationCount')]"
+                    },
+                    "ycsbGitRepositoryURL": {
+                        "value": "[parameters('ycsbGitRepositoryURL')]"
+                    },
+                    "ycsbGitBranchName": {
+                        "value": "[parameters('ycsbGitBranchName')]"
+                    },
+                    "vmScriptExtensionScriptURL": {
+                        "value": "[parameters('vmScriptExtensionScriptURL')]"
+                    },
+                    "vmScriptExtensionScriptName": {
+                        "value": "[parameters('vmScriptExtensionScriptName')]"
+                    },
+                    "cloudInit": {
+                        "value": "[parameters('cloudInit')]"
                     }
-                }
-            },
-            "copy": {
-                "name": "vmcopy",
-                "count": "[parameters('vmCount')]"
-            }
-        },
-        {
-            "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2020-11-01",
-            "name": "[concat(variables('vNetName'), '/default')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', variables('vNetName'))]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
-            ],
-            "properties": {
-                "addressPrefix": "[variables('vNetSubnetAddressPrefix')]",
-                "delegations": [],
-                "privateEndpointNetworkPolicies": "Enabled",
-                "privateLinkServiceNetworkPolicies": "Enabled",
-                "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
-                }
 
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2020-11-01",
-            "name": "[concat(variables('networkInterfaceName'),copyIndex(1))]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('publicIPAddressName'),copyIndex(1)))]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vNetName'), 'default')]"
-            ],
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "privateIPAddress": "10.0.0.4",
-                            "privateIPAllocationMethod": "Dynamic",
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('publicIPAddressName'),copyIndex(1)))]"
-                            },
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vNetName'), 'default')]"
-                            },
-                            "primary": true,
-                            "privateIPAddressVersion": "IPv4"
-                        }
-                    }
-                ],
-                "dnsSettings": {
-                    "dnsServers": []
-                },
-                "enableAcceleratedNetworking": true,
-                "enableIPForwarding": false
-            },
-            "copy": {
-                "name": "networkInterfacecopy",
-                "count": "[parameters('vmCount')]"
-            }
-        },
-        {
-            "type": "Microsoft.Compute/virtualMachines/extensions",
-            "apiVersion": "2019-03-01",
-            "name": "[concat(variables('vmName'),copyIndex(1),'/CustomScript')]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'),copyIndex(1)))]"
-            ],
-            "properties": {
-                "publisher": "Microsoft.Azure.Extensions",
-                "type": "CustomScript",
-                "typeHandlerVersion": "2.1",
-                "autoUpgradeMinorVersion": true,
-                "settings": {
-                },
-                "protectedSettings": {
-                    "commandToExecute": "[concat('YCSB_GIT_REPO_URL=',parameters('ycsbGitRepositoryURL'),' ','YCSB_GIT_BRANCH_NAME=',parameters('ycsbGitBranchName'),' ','TARGET_OPERATIONS_PER_SECOND=',parameters('targetOperationsPerSecond'),' ','THREAD_COUNT=',parameters('threads'),' ','YCSB_OPERATION=',parameters('ycsbOperation'),' ','YCSB_OPERATION_COUNT=',parameters('ycsbOperationCount'), ' ','WORKLOAD_TYPE=',parameters('workloadType'),' ','VM_NAME=',variables('vmName'),copyIndex(1), ' ','RESULT_STORAGE_CONNECTION_STRING=','\"',parameters('resultsStorageConnectionString'),'\"',' ','COSMOS_URI=',parameters('cosmosURI'), ' ','COSMOS_KEY=',parameters('cosmosKey'), ' ','VM_COUNT=',parameters('vmCount'), ' ','ITEM_COUNT_FOR_WRITE=',parameters('itemCountForWriteOps'), ' ','MACHINE_INDEX=',copyIndex(1), ' ', 'bash ',parameters('vmScriptExtensionScriptName'))]",
-                    "fileUris": [ "[concat(parameters('vmScriptExtensionScriptURL'))]" ]
                 }
-            },
-            "copy": {
-                "name": "vmextensioncopy",
-                "count": "[parameters('vmCount')]"
             }
         }
-
-    ]
+    ],
+    "outputs": {
+    }
 }
