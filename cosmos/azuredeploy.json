@@ -162,11 +162,7 @@
                             "destinationAddressPrefix": "*",
                             "access": "Deny",
                             "priority": 102,
-                            "direction": "Inbound",
-                            "sourcePortRanges": [],
-                            "destinationPortRanges": [],
-                            "sourceAddressPrefixes": [],
-                            "destinationAddressPrefixes": []
+                            "direction": "Inbound"
                         }
                     }
                 ]
@@ -184,8 +180,7 @@
             "properties": {
                 "publicIPAddressVersion": "IPv4",
                 "publicIPAllocationMethod": "Dynamic",
-                "idleTimeoutInMinutes": 4,
-                "ipTags": []
+                "idleTimeoutInMinutes": 4  
             },
             "copy": {
                 "name": "publicIPcopy",
@@ -208,15 +203,13 @@
                     {
                         "name": "default",
                         "properties": {
-                            "addressPrefix": "[variables('vNetSubnetAddressPrefix')]",
-                            "delegations": [],
+                            "addressPrefix": "[variables('vNetSubnetAddressPrefix')]",                    
                             "privateEndpointNetworkPolicies": "Enabled",
                             "privateLinkServiceNetworkPolicies": "Enabled"
                         }
 
                     }
                 ],
-                "virtualNetworkPeerings": [],
                 "enableDdosProtection": false
             }
         },
@@ -253,8 +246,7 @@
                         },
                         "deleteOption": "Delete",
                         "diskSizeGB": 30
-                    },
-                    "dataDisks": []
+                    }
                 },
                 "osProfile": {
                     "computerName": "[concat(variables('vmName'),copyIndex(1))]",
@@ -268,8 +260,7 @@
                             "patchMode": "ImageDefault",
                             "assessmentMode": "ImageDefault"
                         }
-                    },
-                    "secrets": [],
+                    },        
                     "allowExtensionOperations": true
                 },
                 "networkProfile": {
@@ -302,8 +293,7 @@
                 "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
             ],
             "properties": {
-                "addressPrefix": "[variables('vNetSubnetAddressPrefix')]",
-                "delegations": [],
+                "addressPrefix": "[variables('vNetSubnetAddressPrefix')]",                
                 "privateEndpointNetworkPolicies": "Enabled",
                 "privateLinkServiceNetworkPolicies": "Enabled",
                 "networkSecurityGroup": {
@@ -339,9 +329,6 @@
                         }
                     }
                 ],
-                "dnsSettings": {
-                    "dnsServers": []
-                },
                 "enableAcceleratedNetworking": true,
                 "enableIPForwarding": false
             },
