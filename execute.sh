@@ -1,21 +1,19 @@
 #!/bin/bash
 
-#echo "########## Sleeping to wait for Automatic Upgrades complete ###########"
-#sleep 180
-#echo "########## Awoke! Ready to procees with the Script ###########"
-
 cloud-init status --wait
 
-echo "##########STORAGE CONNECTION STRING###########: $RESULT_STORAGE_CONNECTION_STRING"
 echo "##########VM Name###########: $VM_NAME"
 echo "##########ITEM_COUNT_FOR_WRITE###########: $ITEM_COUNT_FOR_WRITE"
 echo "##########MACHINE_INDEX###########: $MACHINE_INDEX"
 echo "##########YCSB_OPERATION_COUNT###########: $YCSB_OPERATION_COUNT"
 echo "##########VM_COUNT###########: $VM_COUNT"
 
+# The index of the record to start at during the Load
 insertstart=$((ITEM_COUNT_FOR_WRITE* (MACHINE_INDEX-1)))
+# Records already in the DB + records to be added, during load 
 recordcount=$((ITEM_COUNT_FOR_WRITE* MACHINE_INDEX))
-totalrecordcount=$((ITEM_COUNT_FOR_WRITE* VM_COUNT))
+# Record count for Run. Since we run read workload after load this is the total number of records loaded by all VMs/clients during load. 
+totalrecordcount=$((ITEM_COUNT_FOR_WRITE* VM_COUNT))OUNT_FOR_WRITE* VM_COUNT))
 
 
 #Install Software
