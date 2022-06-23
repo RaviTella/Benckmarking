@@ -207,7 +207,6 @@
                             "privateEndpointNetworkPolicies": "Enabled",
                             "privateLinkServiceNetworkPolicies": "Enabled"
                         }
-
                     }
                 ],
                 "enableDdosProtection": false
