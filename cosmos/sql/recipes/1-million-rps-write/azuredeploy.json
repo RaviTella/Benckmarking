@@ -37,7 +37,7 @@
             }
         },
         "resultsStorageConnectionString": {
-            "type": "securestring",
+            "type": "string",
             "metadata": {
                 "description": "Specifies a connection string of the storage account where results will be avaialble"
             }
