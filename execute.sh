@@ -16,14 +16,14 @@ recordcount=$((ITEM_COUNT_FOR_WRITE* MACHINE_INDEX))
 totalrecordcount=$((ITEM_COUNT_FOR_WRITE* VM_COUNT))OUNT_FOR_WRITE* VM_COUNT))
 
 
-#Install Software
+# Install Software
 echo "########## Installing azcopy ###########"
 wget https://aka.ms/downloadazcopy-v10-linux
 tar -xvf downloadazcopy-v10-linux
 sudo cp ./azcopy_linux_amd64_*/azcopy /usr/bin/
 
 
-#Build YCSB from source
+# Build YCSB from source
 echo "##########Cloning YCSB ##########"
 git clone -b "$YCSB_GIT_BRANCH_NAME" --single-branch "$YCSB_GIT_REPO_URL"
 
@@ -42,7 +42,7 @@ cp ./aggregate_multiple_file_results.py ./ycsb-azurecosmos-binding-0.18.0-SNAPSH
 cp ./converting_log_to_csv.py ./ycsb-azurecosmos-binding-0.18.0-SNAPSHOT
 cd ./ycsb-azurecosmos-binding-0.18.0-SNAPSHOT
 
-## Creating SAS URL for result storage container
+# Creating SAS URL for result storage container
 echo "########## Creating SAS URL for result storage container ###########"
 end=`date -u -d "180 minutes" '+%Y-%m-%dT%H:%MZ'`
 current_time="$(date '+%Y-%m-%d-%Hh%Mm%Ss')"
@@ -62,11 +62,11 @@ account_name=${arr_account_string[1]}
 
 RESULT_STORAGE_URL="${protocol}://${account_name}.blob.core.windows.net/result-${current_time}?${sas}"
 
-##Load operation for YCSB tests
+# Load operation for YCSB tests
 echo "########## Load operation for YCSB tests ###########"
 uri=$COSMOS_URI primaryKey=$COSMOS_KEY workload_type=$WORKLOAD_TYPE ycsb_operation="load" recordcount=$recordcount insertstart=$insertstart insertcount=$ITEM_COUNT_FOR_WRITE threads=$THREAD_COUNT target=$TARGET_OPERATIONS_PER_SECOND sh run.sh
 
-#Execute YCSB test
+# Execute YCSB test
 if [ "$YCSB_OPERATION" = "run" ]; then
   cp /tmp/ycsb.log /home/benchmarking/"$VM_NAME-ycsb-load.txt"
   sudo azcopy copy /home/benchmarking/"$VM_NAME-ycsb-load.txt" "$RESULT_STORAGE_URL"
@@ -78,7 +78,7 @@ if [ "$YCSB_OPERATION" = "run" ]; then
   uri=$COSMOS_URI primaryKey=$COSMOS_KEY workload_type=$WORKLOAD_TYPE ycsb_operation=$YCSB_OPERATION recordcount=$totalrecordcount operationcount=$YCSB_OPERATION_COUNT threads=$THREAD_COUNT target=$TARGET_OPERATIONS_PER_SECOND sh run.sh
 fi
 
-#Copy YCSB log to storage account 
+# Copy YCSB log to storage account 
 echo "########## Copying Results to Storage ###########"
 cp /tmp/ycsb.log /home/benchmarking/"$VM_NAME-ycsb.log"
 sudo python3 converting_log_to_csv.py /home/benchmarking/"$VM_NAME-ycsb.log"
