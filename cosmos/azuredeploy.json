@@ -105,7 +105,7 @@
     },
     "variables": {
         "vNetName": "[concat(parameters('projectName'), '-vnet')]",
-        "vNetAddressPrefixes": "10.0.0.0/16", //is this required
+        "vNetAddressPrefixes": "10.0.0.0/16", 
         "vNetSubnetAddressPrefix": "10.0.0.0/24",
         "vmName": "[concat(parameters('projectName'), '-vm')]",
         "publicIPAddressName": "[concat(parameters('projectName'), '-ip')]",
