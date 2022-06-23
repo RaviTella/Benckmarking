@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "projectName": {
+            "projectName": {
             "type": "string",
             "defaultValue": "Benchmarking",
             "metadata": {
@@ -33,74 +33,106 @@
             "type": "string",
             "defaultValue": "Standard_D2s_v3",
             "metadata": {
-                "description": "description"
+                "description": "Specifies a Virtual Machine size"
             }
         },
         "resultsStorageConnectionString": {
             "type": "securestring",
             "metadata": {
-                "description": "description"
+                "description": "Specifies a connection string of the storage account where results will be avaialble"
             }
         },
         "cosmosURI": {
             "type": "string",
             "metadata": {
-                "description": "description"
+                "description": "Specifies the URI of the Cosmos DB account"
             }
         },
         "cosmosKey": {
             "type": "securestring",
             "metadata": {
-                "description": "description"
+                "description": "Specifies the key for the Cosmos DB account"
             }
         },
         "vmCount": {
             "type": "int",
-            "defaultValue": 1
+            "defaultValue": 1,
+            "metadata": {
+                "description": "Specifies the number of Virtual Machines that will part of the test bench"
+            }
         },
         "workloadType": {
             "type": "string",
-            "defaultValue": "workloadc"
+            "defaultValue": "workloadc",
+            "metadata": {
+                "description": "Specifies the workload"
+            }
+
         },
         "ycsbOperation": {
             "type": "string",
-            "defaultValue": "load"
+            "defaultValue": "load",
+            "metadata": {
+                "description": "Specifies the operation"
+            }
+
         },
         "threads": {
             "type": "int",
-            "defaultValue": 1
+            "defaultValue": 0,
+            "metadata": {
+                "description": "Specifies the threads per client"
+            }
         },
         "targetOperationsPerSecond": {
             "type": "int",
-            "defaultValue": 0
+            "defaultValue": 2,
+            "metadata": {
+                "description": "Specifies the maximum number of operations per second"
+            }
         },
         "itemCountForWriteOps": {
             "type": "int",
             "defaultValue": 1
         },
-		"ycsbOperationCount": {
+        "ycsbOperationCount": {
             "type": "int",
             "defaultValue": 1
         },
         "ycsbGitRepositoryURL": {
             "type": "string",
-            "defaultValue": "https://github.com/simplynaveen20/YCSB.git"
+            "defaultValue": "https://github.com/simplynaveen20/YCSB.git",
+            "metadata": {
+                "description": "Specifies the GitHub Url for YCSB source code repository"
+            }
         },
         "ycsbGitBranchName": {
             "type": "string",
-            "defaultValue": "addingDockerScripts"
+            "defaultValue": "addingDockerScripts",
+            "metadata": {
+                "description": "Specifies the GitHub branch for YCSB source code repository"
+            }
         },
         "vmScriptExtensionScriptURL": {
             "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/execute.sh"
+            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/execute.sh",
+            "metadata": {
+                "description": "Specifies the url for the script that is executed by the Virtual Machine script extension"
+            }
         },
         "vmScriptExtensionScriptName": {
             "type": "string",
-            "defaultValue": "execute.sh"
+            "defaultValue": "execute.sh",
+            "metadata": {
+                "description": "Specifies the script extension name for the script that is executed by the Virtual Machine script extension"
+            }
         },
         "cloudInit": {
             "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/cloud-init.txt"
+            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/cloud-init.txt",
+            "metadata": {
+                "description": "Specifies the cloud-init file url"
+            }
         }
     },
     "variables": {
