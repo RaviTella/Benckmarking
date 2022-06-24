@@ -115,7 +115,7 @@
         },
         "vmScriptExtensionScriptURL": {
             "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/execute.sh",
+            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/users/ratella/cleanup/execute.sh",
             "metadata": {
                 "description": "Specifies the url for the script that is executed by the Virtual Machine script extension"
             }
@@ -129,7 +129,7 @@
         },
         "cloudInit": {
             "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/cloud-init.txt",
+            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/users/ratella/cleanup/cloud-init.txt",
             "metadata": {
                 "description": "Specifies the cloud-init file url"
             }
