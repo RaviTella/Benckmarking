@@ -3,4 +3,3 @@ package_upgrade: true
 packages:
   - maven
   - python3.10
-  - azure-cli
