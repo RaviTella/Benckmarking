@@ -79,7 +79,7 @@
         },
         "threads": {
             "type": "int",
-            "defaultValue": 0,
+            "defaultValue": 1,
             "metadata": {
                 "description": "Specifies the threads per client"
             }
