@@ -31,7 +31,7 @@
         },
         "vmSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_D64s_v4",
             "metadata": {
                 "description": "Specifies a Virtual Machine size"
             }
@@ -56,7 +56,7 @@
         },
         "vmCount": {
             "type": "int",
-            "defaultValue": 1,
+            "defaultValue": 15,
             "metadata": {
                 "description": "Specifies the number of Virtual Machines that will part of the test bench"
             }
@@ -79,14 +79,14 @@
         },
         "threads": {
             "type": "int",
-            "defaultValue": 1,
+            "defaultValue": 400,
             "metadata": {
                 "description": "Specifies the threads per client"
             }
         },
         "targetOperationsPerSecond": {
             "type": "int",
-            "defaultValue": 2,
+            "defaultValue": 67000,
             "metadata": {
                 "description": "Specifies the maximum number of operations per second"
             }
@@ -97,7 +97,7 @@
         },
         "ycsbOperationCount": {
             "type": "int",
-            "defaultValue": 1
+            "defaultValue": 50000000
         },
         "ycsbGitRepositoryURL": {
             "type": "string",
