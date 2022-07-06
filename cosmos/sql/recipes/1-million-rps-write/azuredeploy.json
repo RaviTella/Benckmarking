@@ -144,7 +144,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/RaviTella/Benckmarking/users/ratella/cleanup/azuredeploy.json",
+                    "uri": "https://raw.githubusercontent.com/RaviTella/Benckmarking/users/ratella/cleanup/cosmos/azuredeploy.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
