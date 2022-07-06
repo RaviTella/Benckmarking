@@ -13,7 +13,7 @@
     },
     "cosmosKey": {
       "value": ""
-    }
+    },
     "vmCount": {
       "value": 1
     },
@@ -28,6 +28,9 @@
     },
     "targetOperationsPerSecond": {
       "value": 1
+    },
+	"ycsbOperation": {
+      "value": "load"
     }
   }
 }

@@ -133,6 +133,10 @@
             "metadata": {
                 "description": "Specifies the cloud-init file url"
             }
+        },
+            "guidValue": {
+            "type": "string",
+            "defaultValue": "[newGuid()]"
         }
     },
     "variables": {
@@ -142,7 +146,8 @@
         "vmName": "[concat(parameters('projectName'), '-vm')]",
         "publicIPAddressName": "[concat(parameters('projectName'), '-ip')]",
         "networkInterfaceName": "[concat(parameters('projectName'), '-nic')]",
-        "networkSecurityGroupName": "[concat(parameters('projectName'), '-nsg')]"
+        "networkSecurityGroupName": "[concat(parameters('projectName'), '-nsg')]",
+        "deploymentName": "[deployment().name]"
     },
     "resources": [
         {
@@ -352,7 +357,7 @@
                 "settings": {
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('YCSB_GIT_REPO_URL=',parameters('ycsbGitRepositoryURL'),' ','YCSB_GIT_BRANCH_NAME=',parameters('ycsbGitBranchName'),' ','TARGET_OPERATIONS_PER_SECOND=',parameters('targetOperationsPerSecond'),' ','THREAD_COUNT=',parameters('threads'),' ','YCSB_OPERATION=',parameters('ycsbOperation'),' ','YCSB_OPERATION_COUNT=',parameters('ycsbOperationCount'), ' ','WORKLOAD_TYPE=',parameters('workloadType'),' ','VM_NAME=',variables('vmName'),copyIndex(1), ' ','RESULT_STORAGE_CONNECTION_STRING=','\"',parameters('resultsStorageConnectionString'),'\"',' ','COSMOS_URI=',parameters('cosmosURI'), ' ','COSMOS_KEY=',parameters('cosmosKey'), ' ','VM_COUNT=',parameters('vmCount'), ' ','ITEM_COUNT_FOR_WRITE=',parameters('itemCountForWriteOps'), ' ','MACHINE_INDEX=',copyIndex(1), ' ', 'bash ',parameters('vmScriptExtensionScriptName'))]",
+                    "commandToExecute": "[concat('YCSB_GIT_REPO_URL=',parameters('ycsbGitRepositoryURL'),' ','DEPLOYMENT_NAME=',variables('deploymentName'),' ','GUID=',parameters('guidValue'),' ','YCSB_GIT_BRANCH_NAME=',parameters('ycsbGitBranchName'),' ','TARGET_OPERATIONS_PER_SECOND=',parameters('targetOperationsPerSecond'),' ','THREAD_COUNT=',parameters('threads'),' ','YCSB_OPERATION=',parameters('ycsbOperation'),' ','YCSB_OPERATION_COUNT=',parameters('ycsbOperationCount'), ' ','WORKLOAD_TYPE=',parameters('workloadType'),' ','VM_NAME=',variables('vmName'),copyIndex(1), ' ','RESULT_STORAGE_CONNECTION_STRING=','\"',parameters('resultsStorageConnectionString'),'\"',' ','COSMOS_URI=',parameters('cosmosURI'), ' ','COSMOS_KEY=',parameters('cosmosKey'), ' ','VM_COUNT=',parameters('vmCount'), ' ','ITEM_COUNT_FOR_WRITE=',parameters('itemCountForWriteOps'), ' ','MACHINE_INDEX=',copyIndex(1), ' ', 'bash ',parameters('vmScriptExtensionScriptName'))]",
                     "fileUris": [ "[concat(parameters('vmScriptExtensionScriptURL'))]" ]
                 }
             },
