@@ -70,10 +70,10 @@ if [ $MACHINE_INDEX -eq 1 ]; then
   result_storage_url="${protocol}://${account_name}.blob.core.windows.net/result-${current_time}?${sas}"
 
   client_start_time=$(date -u -d "5 minutes" '+%Y-%m-%dT%H:%M:%S') # date in ISO 8601 format
-  az storage entity insert --entity PartitionKey="${GUID}" RowKey="ycsb_sql" ClientStartTime=$client_start_time SAS_URL=$result_storage_url JobStatus="Started" NoOfClientsCompleted=0 --table-name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING
+  az storage entity insert --entity PartitionKey="ycsb_sql" RowKey="${GUID}" ClientStartTime=$client_start_time SAS_URL=$result_storage_url JobStatus="Started" NoOfClientsCompleted=0 --table-name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING
 else
   for i in $(seq 1 5); do
-    table_entry=$(az storage entity show --table-name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING --partition-key "${GUID}" --row-key "ycsb_sql")
+    table_entry=$(az storage entity show --table-name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING --partition-key "ycsb_sql" --row-key "${GUID}")
     if [ -z "$table_entry" ]; then
       echo "sleeping for 1 min, table row not availble yet"
       sleep 1m
@@ -153,7 +153,7 @@ if [ $MACHINE_INDEX -eq 1 ]; then
 
   #Updating table entry to change JobStatus to 'Finished' and increment NoOfClientsCompleted
   echo "Reading latest table entry"
-  latest_table_entry=$(az storage entity show --table-name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING --partition-key "${GUID}" --row-key "ycsb_sql")
+  latest_table_entry=$(az storage entity show --table-name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING --partition-key "ycsb_sql" --row-key "${GUID}")
   etag=$(echo $latest_table_entry | jq .etag)
   etag=${etag:1:-1}
   etag=$(echo "$etag" | tr -d '\')
@@ -161,11 +161,11 @@ if [ $MACHINE_INDEX -eq 1 ]; then
   no_of_clients_completed=$(echo "$no_of_clients_completed" | tr -d '"')
   no_of_clients_completed=$((no_of_clients_completed + 1))
   echo "Updating latest table entry with incremented NoOfClientsCompleted"
-  az storage entity merge --table-name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING --entity PartitionKey="${GUID}" RowKey="ycsb_sql" JobStatus="Finished" NoOfClientsCompleted=$no_of_clients_completed --if-match=$etag
+  az storage entity merge --table-name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING --entity PartitionKey="ycsb_sql" RowKey="${GUID}" JobStatus="Finished" NoOfClientsCompleted=$no_of_clients_completed --if-match=$etag
 else
-  for j in $(seq 1 5); do
+  for j in $(seq 1 60); do
     echo "Reading latest table entry"
-    latest_table_entry=$(az storage entity show --table-name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING --partition-key "${GUID}" --row-key "ycsb_sql")
+    latest_table_entry=$(az storage entity show --table-name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING --partition-key "ycsb_sql" --row-key "${GUID}")
     etag=$(echo $latest_table_entry | jq .etag)
     etag=${etag:1:-1}
     etag=$(echo "$etag" | tr -d '\')
@@ -173,7 +173,7 @@ else
     no_of_clients_completed=$(echo "$no_of_clients_completed" | tr -d '"')
     no_of_clients_completed=$((no_of_clients_completed + 1))
     echo "Updating latest table entry with incremented NoOfClientsCompleted"
-    replace_entry_result=$(az storage entity merge --table-name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING --entity PartitionKey="${GUID}" RowKey="ycsb_sql" NoOfClientsCompleted=$no_of_clients_completed --if-match=$etag)
+    replace_entry_result=$(az storage entity merge --table-name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING --entity PartitionKey="ycsb_sql" RowKey="${GUID}" NoOfClientsCompleted=$no_of_clients_completed --if-match=$etag)
     if [ -z "$replace_entry_result" ]; then
       echo "Hit race condition on table entry for updating no_of_clients_completed"
       sleep 1s
