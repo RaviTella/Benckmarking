@@ -143,15 +143,12 @@
             "defaultValue": -1
         }
     },
-    "variables": {
-             "vNetName": "[concat(parameters('projectName'), '-vnet')]",
-           "deploymentName": "[concat(parameters('deploymentName'),'-linkedTemplate')]"
-    },
+    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2021-04-01",
-            "name": "[variables('deploymentName')]",
+            "name": "linkedTemplate",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -219,9 +216,9 @@
                     "cloudInit": {
                         "value": "[parameters('cloudInit')]"
                     },                    
-                    // "deploymentName": {
-                    //     "value": "[parameters('deploymentName')]"
-                    // },
+                    "deploymentName": {
+                        "value": "[parameters('deploymentName')]"
+                    },
                     "diagnosticsLatencyThresholdInMS": {
                         "value": "[parameters('diagnosticsLatencyThresholdInMS')]"
                     }
