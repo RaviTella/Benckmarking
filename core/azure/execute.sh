@@ -9,6 +9,11 @@ echo "##########MACHINE_INDEX###########: $MACHINE_INDEX"
 echo "##########YCSB_OPERATION_COUNT###########: $YCSB_OPERATION_COUNT"
 echo "##########VM_COUNT###########: $VM_COUNT"
 
+echo "##########TEST_BENCH_GIT_BRANCH_NAME###########: $TEST_BENCH_GIT_BRANCH_NAME"
+echo "##########TEST_BENCH_GIT_REPO_URL###########: $TEST_BENCH_GIT_REPO_URL"
+echo "##########YCSB_GIT_BRANCH_NAME###########: $YCSB_GIT_BRANCH_NAME"
+echo "##########YCSB_GIT_REPO_URL###########: $YCSB_GIT_REPO_URL"
+
 # The index of the record to start at during the Load
 insertstart=$((ITEM_COUNT_FOR_WRITE* (MACHINE_INDEX-1)))
 # Records already in the DB + records to be added, during load 
@@ -22,14 +27,20 @@ wget https://aka.ms/downloadazcopy-v10-linux
 tar -xvf downloadazcopy-v10-linux
 sudo cp ./azcopy_linux_amd64_*/azcopy /usr/bin/
 
+#Cloning Orchestrator
+echo "########## Cloning Test Bench repository ##########"
+git clone -b "$TEST_BENCH_GIT_BRANCH_NAME" --single-branch "$TEST_BENCH_GIT_REPO_URL"
+cp -r ./Benchmakring/core/azure/* /tmp/ycsb
+cp -r ./Benchmarking/core/data/* /tmp/ycsb
+
 #Build YCSB from source
-echo "##########Cloning YCSB ##########"
+echo "########## Cloning YCSB repository ##########"
 git clone -b "$YCSB_GIT_BRANCH_NAME" --single-branch "$YCSB_GIT_REPO_URL"
 
 echo "########## Building YCSB ##########"
 cd YCSB
 mvn -pl site.ycsb:azurecosmos-binding -am clean package
-cp -r ./azurecosmos/target/ /tmp/ycsb
+#cp -r ./azurecosmos/target/ /tmp/ycsb
 cp -r ./azurecosmos/conf/* /tmp/ycsb
 cd /tmp/ycsb/
 
