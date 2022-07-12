@@ -93,10 +93,6 @@
         },
         "itemCountForWriteOps": {
             "type": "int",
-            "defaultValue": 1
-        },
-        "ycsbOperationCount": {
-            "type": "int",
             "defaultValue": 50000000
         },
         "ycsbGitRepositoryURL": {
@@ -133,6 +129,10 @@
             "metadata": {
                 "description": "Specifies the cloud-init file url"
             }
+        },
+        "diagnosticsLatencyThresholdInMS": {
+            "type": "int",
+            "defaultValue": -1
         }
     },
     "variables": {},
@@ -190,9 +190,9 @@
                     "itemCountForWriteOps": {
                         "value": "[parameters('itemCountForWriteOps')]"
                     },
-                    "ycsbOperationCount": {
-                        "value": "[parameters('ycsbOperationCount')]"
-                    },
+                    // "ycsbOperationCount": {
+                    //     "value": "[parameters('ycsbOperationCount')]"
+                    // },
                     "ycsbGitRepositoryURL": {
                         "value": "[parameters('ycsbGitRepositoryURL')]"
                     },
@@ -207,6 +207,9 @@
                     },
                     "cloudInit": {
                         "value": "[parameters('cloudInit')]"
+                    },
+                    "diagnosticsLatencyThresholdInMS": {
+                        "value": "[parameters('diagnosticsLatencyThresholdInMS')]"
                     }
 
                 }

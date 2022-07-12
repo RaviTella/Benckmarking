@@ -99,9 +99,9 @@
             "type": "int",
             "defaultValue": 1
         },
-        "ycsbGitRepositoryURL": {
+        "ycsbGitRepositoryName": {
             "type": "string",
-            "defaultValue": "https://github.com/simplynaveen20/YCSB.git",
+            "defaultValue": "simplynaveen20/YCSB",
             "metadata": {
                 "description": "Specifies the GitHub Url for YCSB source code repository"
             }
@@ -113,25 +113,18 @@
                 "description": "Specifies the GitHub branch for YCSB source code repository"
             }
         },
-        "vmScriptExtensionScriptURL": {
+        "testBenchRepositoryName": {
             "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/execute.sh",
+            "defaultValue": "RaviTella/Benchmarking",
             "metadata": {
-                "description": "Specifies the url for the script that is executed by the Virtual Machine script extension"
+                "description": "Specifies the GitHub Url for YCSB source code repository"
             }
         },
-        "vmScriptExtensionScriptName": {
+        "testBenchBranchName": {
             "type": "string",
-            "defaultValue": "execute.sh",
+            "defaultValue": "users/ratella/clean",
             "metadata": {
-                "description": "Specifies the script extension name for the script that is executed by the Virtual Machine script extension"
-            }
-        },
-        "cloudInit": {
-            "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/RaviTella/Benckmarking/main/cloud-init.txt",
-            "metadata": {
-                "description": "Specifies the cloud-init file url"
+                "description": "Specifies the GitHub branch for YCSB source code repository"
             }
         },
         "guidValue": {
@@ -142,7 +135,7 @@
             "type": "string",
             "defaultValue": "[deployment().name]"
         },
-		"diagnosticsLatencyThresholdInMS": {
+        "diagnosticsLatencyThresholdInMS": {
             "type": "int",
             "defaultValue": -1
         }
@@ -154,7 +147,12 @@
         "vmName": "[concat(parameters('projectName'), '-vm')]",
         "publicIPAddressName": "[concat(parameters('projectName'), '-ip')]",
         "networkInterfaceName": "[concat(parameters('projectName'), '-nic')]",
-        "networkSecurityGroupName": "[concat(parameters('projectName'), '-nsg')]"    
+        "networkSecurityGroupName": "[concat(parameters('projectName'), '-nsg')]",
+        "testBenchGitReposirotyUrl": "[ concat('https://github.com/',parameters('testBenchRepositoryName'),'.git')]",
+        "cloudInitScriptUrl": "[concat('https://raw.githubusercontent.com/',parameters('testBenchRepositoryName'),'/',parameters('testBenchBranchName'),'/cloud-init.txt')]",
+        "vmScriptExtensionScriptUrl": "[concat('https://raw.githubusercontent.com/',parameters('testBenchRepositoryName'),'/',parameters('testBenchBranchName'),'/execute.sh')]",
+        "ycsbGitReposirotyUrl": "[ concat('https://github.com/',parameters('ycsbGitRepositoryName'),'.git')]"
+
     },
     "resources": [
         {
@@ -263,7 +261,7 @@
                     "computerName": "[concat(variables('vmName'),copyIndex(1))]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPassword')]",
-                    "customData": "[base64(concat('#include\n',parameters('cloudInit')))]",
+                    "customData": "[base64(concat('#include\n',variables('cloudInitScriptUrl')))]",
                     "linuxConfiguration": {
                         "disablePasswordAuthentication": false,
                         "provisionVMAgent": true,
@@ -364,9 +362,9 @@
                 "settings": {
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('YCSB_GIT_REPO_URL=',parameters('ycsbGitRepositoryURL'),' ','DEPLOYMENT_NAME=',parameters('deploymentName'),' ','GUID=',parameters('guidValue'),' ','YCSB_GIT_BRANCH_NAME=',parameters('ycsbGitBranchName'),' ','TARGET_OPERATIONS_PER_SECOND=',parameters('targetOperationsPerSecond'),' ','THREAD_COUNT=',parameters('threads'),' ','YCSB_OPERATION=',parameters('ycsbOperation'),' ','YCSB_OPERATION_COUNT=',parameters('ycsbOperationCount'), ' ','WORKLOAD_TYPE=',parameters('workloadType'),' ','VM_NAME=',variables('vmName'),copyIndex(1), ' ','RESULT_STORAGE_CONNECTION_STRING=','\"',parameters('resultsStorageConnectionString'),'\"',' ','COSMOS_URI=',parameters('cosmosURI'), ' ','COSMOS_KEY=',parameters('cosmosKey'), ' ','VM_COUNT=',parameters('vmCount'), ' ','DIAGNOSTICS_LATENCY_THRESHOLD_IN_MS=',parameters('diagnosticsLatencyThresholdInMS'), ' ','ITEM_COUNT_FOR_WRITE=',parameters('itemCountForWriteOps'), ' ','MACHINE_INDEX=',copyIndex(1), ' ', 'bash ',parameters('vmScriptExtensionScriptName'))]",
-                    "fileUris": [ "[concat(parameters('vmScriptExtensionScriptURL'))]" ]
-                }
+                    "commandToExecute": "[concat('TEST_BENCH_GIT_REPO_URL=',variables('testBenchGitReposirotyUrl'),' ','TEST_BENCH_GIT_BRANCH_NAME=',parameters('testBenchBranchName'),'YCSB_GIT_REPO_URL=',variables('ycsbGitReposirotyUrl'),' ','DEPLOYMENT_NAME=',parameters('deploymentName'),' ','GUID=',parameters('guidValue'),' ','YCSB_GIT_BRANCH_NAME=',parameters('ycsbGitBranchName'),' ','TARGET_OPERATIONS_PER_SECOND=',parameters('targetOperationsPerSecond'),' ','THREAD_COUNT=',parameters('threads'),' ','YCSB_OPERATION=',parameters('ycsbOperation'),' ','YCSB_OPERATION_COUNT=',parameters('ycsbOperationCount'), ' ','WORKLOAD_TYPE=',parameters('workloadType'),' ','VM_NAME=',variables('vmName'),copyIndex(1), ' ','RESULT_STORAGE_CONNECTION_STRING=','\"',parameters('resultsStorageConnectionString'),'\"',' ','COSMOS_URI=',parameters('cosmosURI'), ' ','COSMOS_KEY=',parameters('cosmosKey'), ' ','VM_COUNT=',parameters('vmCount'), ' ','DIAGNOSTICS_LATENCY_THRESHOLD_IN_MS=',parameters('diagnosticsLatencyThresholdInMS'), ' ','ITEM_COUNT_FOR_WRITE=',parameters('itemCountForWriteOps'), ' ','MACHINE_INDEX=',copyIndex(1), ' ', 'bash ',variables('vmScriptExtensionScriptName'))]",
+                    "fileUris": [ "[concat(variables('vmScriptExtensionScriptURL'))]" ]
+                                    }
             },
             "copy": {
                 "name": "vmextensioncopy",
