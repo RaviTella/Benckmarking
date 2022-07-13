@@ -2,35 +2,56 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "projectName": {
+      "value": "Benchmarking"
+    },
+    "adminUsername": {
+      "value": "benchmarking"
+    },
     "adminPassword": {
-      "value": ""
+      "value": "JavaScala#10"
     },
     "resultsStorageConnectionString": {
-      "value": ""
+      "value": "DefaultEndpointsProtocol=https;AccountName=raviresults;AccountKey=uYgTfU17T4jcYZaORSGE6c7h8qiwgrGEFP6+JvAQ5ACIw9oRz4CP9SDK5wKPCybGJooreVLEtbbk+AStQhOurg==;EndpointSuffix=core.windows.net"
     },
     "cosmosURI": {
-      "value": ""
+      "value": "https://rt-cosmosdb.documents.azure.com:443/"
     },
     "cosmosKey": {
-      "value": ""
+      "value": "QLzMWy2zjUlOKUYEsHG3eaFLnxNqFO0sEHKFIzzzAbdVKRtgTTSxhwYJiHAwoCGq55jFdEeMfSk7btg3cFb8cg=="
     },
     "vmCount": {
-      "value": 1
+      "value": 2
     },
-    "itemCountForWriteOps": {
-      "value": 1
+    "workloadType": {
+      "value": "workloadc"
     },
-    "ycsbOperationCount": {
-      "value": 1
+    "ycsbOperation": {
+      "value": "load"
     },
     "threads": {
-      "value": 1
+      "value": 2
     },
     "targetOperationsPerSecond": {
-      "value": 1
+      "value": 2
     },
-	"ycsbOperation": {
-      "value": "load"
+    "itemCountForWriteOps": {
+      "value": 4
+    },
+    "ycsbOperationCount": {
+      "value": 0
+    },
+    "ycsbGitHubRepoName": {
+      "value": "simplynaveen20/YCSB"
+    },
+    "ycsbGitHubBranchName": {
+      "value": "addingDockerScripts"
+    },
+    "testBenchGitHubRepoName": {
+      "value": "RaviTella/Benckmarking"
+    },
+    "testBenchGitHubBranchName": {
+      "value": "users/ratella/clean"
     }
   }
 }

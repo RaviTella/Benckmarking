@@ -99,28 +99,28 @@
             "type": "int",
             "defaultValue": 1
         },
-        "ycsbGitRepositoryName": {
+        "ycsbGitHubRepoName": {
             "type": "string",
             "defaultValue": "simplynaveen20/YCSB",
             "metadata": {
                 "description": "Specifies the GitHub Url for YCSB source code repository"
             }
         },
-        "ycsbGitBranchName": {
+        "ycsbGitHubBranchName": {
             "type": "string",
             "defaultValue": "addingDockerScripts",
             "metadata": {
                 "description": "Specifies the GitHub branch for YCSB source code repository"
             }
         },
-        "testBenchRepositoryName": {
+        "testBenchGitHubRepoName": {
             "type": "string",
-            "defaultValue": "RaviTella/Benchmarking",
+            "defaultValue": "RaviTella/Benckmarking",
             "metadata": {
                 "description": "Specifies the GitHub Url for YCSB source code repository"
             }
         },
-        "testBenchBranchName": {
+        "testBenchGitHubBranchName": {
             "type": "string",
             "defaultValue": "users/ratella/clean",
             "metadata": {
@@ -148,11 +148,11 @@
         "publicIPAddressName": "[concat(parameters('projectName'), '-ip')]",
         "networkInterfaceName": "[concat(parameters('projectName'), '-nic')]",
         "networkSecurityGroupName": "[concat(parameters('projectName'), '-nsg')]",
-        "testBenchGitReposirotyUrl": "[ concat('https://github.com/',parameters('testBenchRepositoryName'),'.git')]",
-        "cloudInitScriptUrl": "[concat('https://raw.githubusercontent.com/',parameters('testBenchRepositoryName'),'/',parameters('testBenchBranchName'),'/cloud-init.txt')]",
-        "vmScriptExtensionScriptUrl": "[concat('https://raw.githubusercontent.com/',parameters('testBenchRepositoryName'),'/',parameters('testBenchBranchName'),'/execute.sh')]",
-        "ycsbGitReposirotyUrl": "[ concat('https://github.com/',parameters('ycsbGitRepositoryName'),'.git')]"
-
+        "testBenchGitHubRepoUrl": "[ concat('https://github.com/',parameters('testBenchGitHubRepoName'),'.git')]",
+        "cloudInitScriptUrl": "[concat('https://raw.githubusercontent.com/',parameters('testBenchGitHubRepoName'),'/',parameters('testBenchGitHubBranchName'),'/core/azure/cloud-init.txt')]",
+        "vmScriptExtensionScriptUrl": "[concat('https://raw.githubusercontent.com/',parameters('testBenchGitHubRepoName'),'/',parameters('testBenchGitHubBranchName'),'/core/azure/execute.sh')]",
+        "vmScriptExtensionScriptName": "execute.sh",
+        "ycsbGitHubRepoUrl": "[concat('https://github.com/',parameters('ycsbGitHubRepoName'),'.git')]"
     },
     "resources": [
         {
@@ -362,9 +362,9 @@
                 "settings": {
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('TEST_BENCH_GIT_REPO_URL=',variables('testBenchGitReposirotyUrl'),' ','TEST_BENCH_GIT_BRANCH_NAME=',parameters('testBenchBranchName'),'YCSB_GIT_REPO_URL=',variables('ycsbGitReposirotyUrl'),' ','DEPLOYMENT_NAME=',parameters('deploymentName'),' ','GUID=',parameters('guidValue'),' ','YCSB_GIT_BRANCH_NAME=',parameters('ycsbGitBranchName'),' ','TARGET_OPERATIONS_PER_SECOND=',parameters('targetOperationsPerSecond'),' ','THREAD_COUNT=',parameters('threads'),' ','YCSB_OPERATION=',parameters('ycsbOperation'),' ','YCSB_OPERATION_COUNT=',parameters('ycsbOperationCount'), ' ','WORKLOAD_TYPE=',parameters('workloadType'),' ','VM_NAME=',variables('vmName'),copyIndex(1), ' ','RESULT_STORAGE_CONNECTION_STRING=','\"',parameters('resultsStorageConnectionString'),'\"',' ','COSMOS_URI=',parameters('cosmosURI'), ' ','COSMOS_KEY=',parameters('cosmosKey'), ' ','VM_COUNT=',parameters('vmCount'), ' ','DIAGNOSTICS_LATENCY_THRESHOLD_IN_MS=',parameters('diagnosticsLatencyThresholdInMS'), ' ','ITEM_COUNT_FOR_WRITE=',parameters('itemCountForWriteOps'), ' ','MACHINE_INDEX=',copyIndex(1), ' ', 'bash ',variables('vmScriptExtensionScriptName'))]",
+                    "commandToExecute": "[concat('TEST_BENCH_GIT_REPO_URL=',variables('testBenchGitHubRepoUrl'),' ','TEST_BENCH_GIT_BRANCH_NAME=',parameters('testBenchGitHubBranchName'),' ','YCSB_GIT_REPO_URL=',variables('ycsbGitHubRepoUrl'),' ','DEPLOYMENT_NAME=',parameters('deploymentName'),' ','GUID=',parameters('guidValue'),' ','YCSB_GIT_BRANCH_NAME=',parameters('ycsbGitHubBranchName'),' ','TARGET_OPERATIONS_PER_SECOND=',parameters('targetOperationsPerSecond'),' ','THREAD_COUNT=',parameters('threads'),' ','YCSB_OPERATION=',parameters('ycsbOperation'),' ','YCSB_OPERATION_COUNT=',parameters('ycsbOperationCount'), ' ','WORKLOAD_TYPE=',parameters('workloadType'),' ','VM_NAME=',variables('vmName'),copyIndex(1), ' ','RESULT_STORAGE_CONNECTION_STRING=','\"',parameters('resultsStorageConnectionString'),'\"',' ','COSMOS_URI=',parameters('cosmosURI'), ' ','COSMOS_KEY=',parameters('cosmosKey'), ' ','VM_COUNT=',parameters('vmCount'), ' ','DIAGNOSTICS_LATENCY_THRESHOLD_IN_MS=',parameters('diagnosticsLatencyThresholdInMS'), ' ','ITEM_COUNT_FOR_WRITE=',parameters('itemCountForWriteOps'), ' ','MACHINE_INDEX=',copyIndex(1), ' ', 'bash ',variables('vmScriptExtensionScriptName'))]",
                     "fileUris": [ "[concat(variables('vmScriptExtensionScriptURL'))]" ]
-                                    }
+                }
             },
             "copy": {
                 "name": "vmextensioncopy",

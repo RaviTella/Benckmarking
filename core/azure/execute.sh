@@ -30,8 +30,9 @@ sudo cp ./azcopy_linux_amd64_*/azcopy /usr/bin/
 #Cloning Orchestrator
 echo "########## Cloning Test Bench repository ##########"
 git clone -b "$TEST_BENCH_GIT_BRANCH_NAME" --single-branch "$TEST_BENCH_GIT_REPO_URL"
-cp -r ./Benchmakring/core/azure/* /tmp/ycsb
-cp -r ./Benchmarking/core/data/* /tmp/ycsb
+mkdir /tmp/ycsb
+cp -r ./Benckmarking/core/azure/* /tmp/ycsb
+cp -r ./Benckmarking/core/data/* /tmp/ycsb
 
 #Build YCSB from source
 echo "########## Cloning YCSB repository ##########"
