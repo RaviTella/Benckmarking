@@ -4,10 +4,11 @@ cloud-init status --wait
 
 echo "##########DEPLOYMENT_NAME###########: $DEPLOYMENT_NAME"
 echo "##########VM NAME###########: $VM_NAME"
-echo "##########ITEM_COUNT_FOR_WRITE###########: $ITEM_COUNT_FOR_WRITE"
+echo "##########YCSB_RECORD_COUNT###########: $YCSB_RECORD_COUNT"
 echo "##########MACHINE_INDEX###########: $MACHINE_INDEX"
 echo "##########YCSB_OPERATION_COUNT###########: $YCSB_OPERATION_COUNT"
 echo "##########VM_COUNT###########: $VM_COUNT"
+echo "##########WRITE_ONLY_OPERATION###########: $WRITE_ONLY_OPERATION"
 
 echo "##########TEST_BENCH_GIT_BRANCH_NAME###########: $TEST_BENCH_GIT_BRANCH_NAME"
 echo "##########TEST_BENCH_GIT_REPO_URL###########: $TEST_BENCH_GIT_REPO_URL"
@@ -15,11 +16,12 @@ echo "##########YCSB_GIT_BRANCH_NAME###########: $YCSB_GIT_BRANCH_NAME"
 echo "##########YCSB_GIT_REPO_URL###########: $YCSB_GIT_REPO_URL"
 
 # The index of the record to start at during the Load
-insertstart=$((ITEM_COUNT_FOR_WRITE* (MACHINE_INDEX-1)))
-# Records already in the DB + records to be added, during load 
-recordcount=$((ITEM_COUNT_FOR_WRITE* MACHINE_INDEX))
-# Record count for Run. Since we run read workload after load this is the total number of records loaded by all VMs/clients during load. 
-totalrecordcount=$((ITEM_COUNT_FOR_WRITE* VM_COUNT))
+insertstart=$((YCSB_RECORD_COUNT * (MACHINE_INDEX - 1)))
+# Records already in the DB + records to be added, during load
+recordcount=$((YCSB_RECORD_COUNT * MACHINE_INDEX))
+# Record count for Run. Since we run read workload after load this is the total number of records loaded by all VMs/clients during load.
+totalrecordcount=$((YCSB_RECORD_COUNT * VM_COUNT))
+
 
 #Install Software
 echo "########## Installing azcopy ###########"
@@ -27,7 +29,7 @@ wget https://aka.ms/downloadazcopy-v10-linux
 tar -xvf downloadazcopy-v10-linux
 sudo cp ./azcopy_linux_amd64_*/azcopy /usr/bin/
 
-#Cloning Orchestrator
+#Cloning Test Bench Repo
 echo "########## Cloning Test Bench repository ##########"
 git clone -b "$TEST_BENCH_GIT_BRANCH_NAME" --single-branch "$TEST_BENCH_GIT_REPO_URL"
 mkdir /tmp/ycsb
@@ -107,8 +109,8 @@ fi
 ## converting client_start_time into seconds
 client_start_time=$(date -d "$client_start_time" +'%s')
 
-## If it is load operation sync the clients start time
-if [ "$YCSB_OPERATION" = "load" ]; then
+#Execute YCSB test
+if [ "$WRITE_ONLY_OPERATION" = True ] || [ "$WRITE_ONLY_OPERATION" = true ]; then
   now=$(date +"%s")
   wait_interval=$(($client_start_time - $now))
   if [ $wait_interval -gt 0 ]; then
@@ -117,14 +119,16 @@ if [ "$YCSB_OPERATION" = "load" ]; then
   else
     echo "Not sleeping on clients sync time $client_start_time as it already past"
   fi
-fi
+  ## Records count for write only ops which start with items count created by previous(machine_index -1) client machine
+  recordcountForWriteOps=$((YCSB_OPERATION_COUNT * MACHINE_INDEX ))
+  ## Execute run phase for YCSB tests with write only workload
+  echo "########## Run operation with write only workload for YCSB tests ###########"
+  uri=$COSMOS_URI primaryKey=$COSMOS_KEY workload_type=$WORKLOAD_TYPE ycsb_operation="run" insertproportion=1 readproportion=0 updateproportion=0 scanproportion=0 recordcount=$recordcountForWriteOps operationcount=$YCSB_OPERATION_COUNT threads=$THREAD_COUNT target=$TARGET_OPERATIONS_PER_SECOND diagnosticsLatencyThresholdInMS=$DIAGNOSTICS_LATENCY_THRESHOLD_IN_MS requestdistribution=$REQUEST_DISTRIBUTION insertorder=$INSERT_ORDER sh run.sh
+else
+  ## Execute load operation for YCSB tests
+  echo "########## Load operation for YCSB tests ###########"
+  uri=$COSMOS_URI primaryKey=$COSMOS_KEY workload_type=$WORKLOAD_TYPE ycsb_operation="load" recordcount=$recordcount insertstart=$insertstart insertcount=$YCSB_RECORD_COUNT threads=$THREAD_COUNT target=$TARGET_OPERATIONS_PER_SECOND diagnosticsLatencyThresholdInMS=$DIAGNOSTICS_LATENCY_THRESHOLD_IN_MS requestdistribution=$REQUEST_DISTRIBUTION insertorder=$INSERT_ORDER sh run.sh
 
-##Load operation for YCSB tests
-echo "########## Load operation for YCSB tests ###########"
-uri=$COSMOS_URI primaryKey=$COSMOS_KEY workload_type=$WORKLOAD_TYPE ycsb_operation="load" recordcount=$recordcount insertstart=$insertstart insertcount=$ITEM_COUNT_FOR_WRITE threads=$THREAD_COUNT target=$TARGET_OPERATIONS_PER_SECOND sh run.sh
-
-#Execute YCSB test
-if [ "$YCSB_OPERATION" = "run" ]; then
   now=$(date +"%s")
   wait_interval=$(($client_start_time - $now))
   if [ $wait_interval -gt 0 ]; then
@@ -138,7 +142,9 @@ if [ "$YCSB_OPERATION" = "run" ]; then
   # Clearing log file from above load operation
   sudo rm -f /tmp/ycsb.log
   sudo rm -f "/home/benchmarking/$VM_NAME-ycsb-load.txt"
-  uri=$COSMOS_URI primaryKey=$COSMOS_KEY workload_type=$WORKLOAD_TYPE ycsb_operation=$YCSB_OPERATION recordcount=$totalrecordcount operationcount=$YCSB_OPERATION_COUNT threads=$THREAD_COUNT target=$TARGET_OPERATIONS_PER_SECOND sh run.sh
+  ## Execute run phase for YCSB tests
+  echo "########## Run operation for YCSB tests ###########"
+  uri=$COSMOS_URI primaryKey=$COSMOS_KEY workload_type=$WORKLOAD_TYPE ycsb_operation="run" recordcount=$totalrecordcount operationcount=$YCSB_OPERATION_COUNT threads=$THREAD_COUNT target=$TARGET_OPERATIONS_PER_SECOND insertproportion=$INSERT_PROPORTION readproportion=$READ_PROPORTION updateproportion=$UPDATE_PROPORTION scanproportion=$SCAN_PROPORTION diagnosticsLatencyThresholdInMS=$DIAGNOSTICS_LATENCY_THRESHOLD_IN_MS requestdistribution=$REQUEST_DISTRIBUTION insertorder=$INSERT_ORDER sh run.sh
 fi
 
 #Copy YCSB log to storage account
