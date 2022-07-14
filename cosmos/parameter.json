@@ -9,16 +9,16 @@
       "value": "benchmarking"
     },
     "adminPassword": {
-      "value": "JavaScala#10"
+      "value": ""
     },
     "resultsStorageConnectionString": {
-      "value": "DefaultEndpointsProtocol=https;AccountName=raviresults;AccountKey=uYgTfU17T4jcYZaORSGE6c7h8qiwgrGEFP6+JvAQ5ACIw9oRz4CP9SDK5wKPCybGJooreVLEtbbk+AStQhOurg==;EndpointSuffix=core.windows.net"
+      "value": ""
     },
     "cosmosURI": {
-      "value": "https://rt-cosmosdb.documents.azure.com:443/"
+      "value": ""
     },
     "cosmosKey": {
-      "value": "QLzMWy2zjUlOKUYEsHG3eaFLnxNqFO0sEHKFIzzzAbdVKRtgTTSxhwYJiHAwoCGq55jFdEeMfSk7btg3cFb8cg=="
+      "value": ""
     },
     "vmCount": {
       "value": 2
