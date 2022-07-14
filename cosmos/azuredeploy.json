@@ -69,14 +69,6 @@
             }
 
         },
-        "ycsbOperation": {
-            "type": "string",
-            "defaultValue": "load",
-            "metadata": {
-                "description": "Specifies the operation"
-            }
-
-        },
         "threads": {
             "type": "int",
             "defaultValue": 0,
@@ -91,7 +83,7 @@
                 "description": "Specifies the maximum number of operations per second"
             }
         },
-        "itemCountForWriteOps": {
+        "ycsbRecordCount": {
             "type": "int",
             "defaultValue": 1
         },
@@ -138,6 +130,55 @@
         "diagnosticsLatencyThresholdInMS": {
             "type": "int",
             "defaultValue": -1
+        },
+        "readproportion": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Specifies read operation percentage from 0 to 1"
+            }
+        },
+        "updateproportion": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Specifies update operation percentage from 0 to 1"
+            }
+        },
+        "scanproportion": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Specifies scan operation percentage from 0 to 1"
+            }
+        },
+        "insertproportion": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Specifies insert operation percentage from 0 to 1"
+            }
+        },
+        "writeOnlyOperation": {
+            "type": "bool",
+            "defaultValue": false,
+            "metadata": {
+                "description": "Specifies writeOnlyOperation true or false, if true it will override the workload and run 100% write, transaction wont fail on single error which is opposite of load phase"
+            }
+        },
+        "requestdistribution": {
+            "type": "string",
+            "defaultValue": "uniform",
+            "metadata": {
+                "description": "Specifies request distribution"
+            }
+        },
+        "insertorder": {
+            "type": "string",
+            "defaultValue": "hashed",
+            "metadata": {
+                "description": "Specifies insert data in ordered or hashed manner"
+            }
         }
     },
     "variables": {
@@ -362,8 +403,9 @@
                 "settings": {
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('TEST_BENCH_GIT_REPO_URL=',variables('testBenchGitHubRepoUrl'),' ','TEST_BENCH_GIT_BRANCH_NAME=',parameters('testBenchGitHubBranchName'),' ','YCSB_GIT_REPO_URL=',variables('ycsbGitHubRepoUrl'),' ','DEPLOYMENT_NAME=',parameters('deploymentName'),' ','GUID=',parameters('guidValue'),' ','YCSB_GIT_BRANCH_NAME=',parameters('ycsbGitHubBranchName'),' ','TARGET_OPERATIONS_PER_SECOND=',parameters('targetOperationsPerSecond'),' ','THREAD_COUNT=',parameters('threads'),' ','YCSB_OPERATION=',parameters('ycsbOperation'),' ','YCSB_OPERATION_COUNT=',parameters('ycsbOperationCount'), ' ','WORKLOAD_TYPE=',parameters('workloadType'),' ','VM_NAME=',variables('vmName'),copyIndex(1), ' ','RESULT_STORAGE_CONNECTION_STRING=','\"',parameters('resultsStorageConnectionString'),'\"',' ','COSMOS_URI=',parameters('cosmosURI'), ' ','COSMOS_KEY=',parameters('cosmosKey'), ' ','VM_COUNT=',parameters('vmCount'), ' ','DIAGNOSTICS_LATENCY_THRESHOLD_IN_MS=',parameters('diagnosticsLatencyThresholdInMS'), ' ','ITEM_COUNT_FOR_WRITE=',parameters('itemCountForWriteOps'), ' ','MACHINE_INDEX=',copyIndex(1), ' ', 'bash ',variables('vmScriptExtensionScriptName'))]",
+                    "commandToExecute": "[concat('TEST_BENCH_GIT_REPO_URL=',variables('testBenchGitHubRepoUrl'),' ','TEST_BENCH_GIT_BRANCH_NAME=',parameters('testBenchGitHubBranchName'),' ','YCSB_GIT_REPO_URL=',variables('ycsbGitHubRepoUrl'),' ','DEPLOYMENT_NAME=',parameters('deploymentName'),' ','GUID=',parameters('guidValue'),' ','YCSB_GIT_BRANCH_NAME=',parameters('ycsbGitHubBranchName'),' ','TARGET_OPERATIONS_PER_SECOND=',parameters('targetOperationsPerSecond'),' ','THREAD_COUNT=',parameters('threads'),' ','YCSB_OPERATION_COUNT=',parameters('ycsbOperationCount'), ' ','WORKLOAD_TYPE=',parameters('workloadType'),' ','VM_NAME=',variables('vmName'),copyIndex(1), ' ','RESULT_STORAGE_CONNECTION_STRING=','\"',parameters('resultsStorageConnectionString'),'\"',' ','COSMOS_URI=',parameters('cosmosURI'), ' ','COSMOS_KEY=',parameters('cosmosKey'), ' ','VM_COUNT=',parameters('vmCount'), ' ','DIAGNOSTICS_LATENCY_THRESHOLD_IN_MS=',parameters('diagnosticsLatencyThresholdInMS'), ' ','YCSB_RECORD_COUNT=',parameters('ycsbRecordCount'), ' ','WRITE_ONLY_OPERATION=',parameters('writeOnlyOperation'), ' ','READ_PROPORTION=',parameters('readproportion'), ' ','SCAN_PROPORTION=',parameters('scanproportion'), ' ','UPDATE_PROPORTION=',parameters('updateproportion'), ' ','INSERT_PROPORTION=',parameters('insertproportion'), ' ','REQUEST_DISTRIBUTION=',parameters('requestdistribution'), ' ','INSERT_ORDER=',parameters('insertorder'), ' ','MACHINE_INDEX=',copyIndex(1), ' ', 'bash ',variables('vmScriptExtensionScriptName'))]",
                     "fileUris": [ "[concat(variables('vmScriptExtensionScriptURL'))]" ]
+
                 }
             },
             "copy": {
