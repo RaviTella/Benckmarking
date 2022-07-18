@@ -168,7 +168,8 @@ if [ $MACHINE_INDEX -eq 1 ]; then
   url_first_part=$(echo $result_storage_url | cut -c 1-$((index_for_regex - 1)))
   url_second_part=$(echo $result_storage_url | cut -c $((index_for_regex))-${#result_storage_url})
   new_storage_url="$url_first_part$regex_to_append$url_second_part"
-  sudo azcopy copy $new_storage_url '/home/$ADMIN_USER_NAME/aggregation' --recursive=true
+  aggregation_dir="/home/$ADMIN_USER_NAME/aggregation"
+  sudo azcopy copy $new_storage_url $aggregation_dir --recursive=true 
   sudo python3 /tmp/ycsb/ycsb-azurecosmos-binding-0.18.0-SNAPSHOT/aggregate_multiple_file_results.py /home/$ADMIN_USER_NAME/aggregation
   sudo azcopy copy aggregation.csv "$result_storage_url"
 
