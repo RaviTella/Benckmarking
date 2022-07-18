@@ -191,8 +191,8 @@
         "networkInterfaceName": "[concat(parameters('projectName'), '-nic')]",
         "networkSecurityGroupName": "[concat(parameters('projectName'), '-nsg')]",
         "testBenchGitHubRepoUrl": "[ concat('https://github.com/',parameters('testBenchGitHubRepoName'),'.git')]",
-        "cloudInitScriptUrl": "[concat('https://raw.githubusercontent.com/',parameters('testBenchGitHubRepoName'),'/',parameters('testBenchGitHubBranchName'),'/core/azure/cloud-init.txt')]",
-        "vmScriptExtensionScriptUrl": "[concat('https://raw.githubusercontent.com/',parameters('testBenchGitHubRepoName'),'/',parameters('testBenchGitHubBranchName'),'/core/azure/execute.sh')]",
+        "cloudInitScriptUrl": "[concat('https://raw.githubusercontent.com/',parameters('testBenchGitHubRepoName'),'/',parameters('testBenchGitHubBranchName'),'/system/cloud-init.txt')]",
+        "vmScriptExtensionScriptUrl": "[concat('https://raw.githubusercontent.com/',parameters('testBenchGitHubRepoName'),'/',parameters('testBenchGitHubBranchName'),'cosmos/scripts/execute.sh')]",
         "vmScriptExtensionScriptName": "execute.sh",
         "ycsbGitHubRepoUrl": "[concat('https://github.com/',parameters('ycsbGitHubRepoName'),'.git')]"
     },
