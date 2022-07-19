@@ -36,6 +36,35 @@
                 "description": "Specifies a Virtual Machine size"
             }
         },
+        "vNetName": {
+            "type": "string",
+            "defaultValue": "[concat(parameters('projectName'), '-vnet')]",
+            "metadata": {
+                "description": "Specifies a Virtual Network name"
+            }
+        },
+        "vNetAddressPrefixes": {
+            "type": "string",
+            "defaultValue": "10.2.0.0/16",
+            "metadata": {
+                "description": "Specifies a Virtual Network Address Prefix"
+            }
+        },
+        "vNetSubnetName": {
+            "type": "string",
+            "defaultValue": "default",
+            "metadata": {
+                "description": "Specifies a Virtual Network Subnet name"
+            }
+        },
+        "vNetSubnetAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.2.0.0/24",
+            "metadata": {
+                "description": "Specifies a Virtual Network Subnet Address Prefix "
+            }
+        },
+
         "resultsStorageConnectionString": {
             "type": "string",
             "metadata": {
@@ -181,12 +210,8 @@
             }
         }
     },
-    "variables": {
-        "vNetName": "[concat(parameters('projectName'), '-vnet')]",
-        "vNetAddressPrefixes": "10.2.0.0/16",
-        "vNetSubnetAddressPrefix": "10.2.0.0/24",
-        "vNetSubnetName": "default",
-        "vmName": "[concat(parameters('projectName'), '-vm')]",
+    "variables": {     
+       "vmName": "[concat(parameters('projectName'), '-vm')]",
         "publicIPAddressName": "[concat(parameters('projectName'), '-ip')]",
         "networkInterfaceName": "[concat(parameters('projectName'), '-nic')]",
         "networkSecurityGroupName": "[concat(parameters('projectName'), '-nsg')]",
@@ -243,19 +268,19 @@
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2020-11-01",
-            "name": "[variables('vNetName')]",
+            "name": "[parameters('vNetName')]",
             "location": "[parameters('location')]",
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "[variables('vNetAddressPrefixes')]"
+                        "[parameters('vNetAddressPrefixes')]"
                     ]
                 },
                 "subnets": [
                     {
-                        "name": "[variables('vNetSubnetName')]",
+                        "name": "[parameters('vNetSubnetName')]",
                         "properties": {
-                            "addressPrefix": "[variables('vNetSubnetAddressPrefix')]",
+                            "addressPrefix": "[parameters('vNetSubnetAddressPrefix')]",
                             "privateEndpointNetworkPolicies": "Enabled",
                             "privateLinkServiceNetworkPolicies": "Enabled"
                         }
@@ -267,13 +292,13 @@
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2020-11-01",
-            "name": "[concat(variables('vNetName'), '/',variables('vNetSubnetName'))]",
+            "name": "[concat(parameters('vNetName'), '/',parameters('vNetSubnetName'))]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', variables('vNetName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('vNetName'))]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
             ],
             "properties": {
-                "addressPrefix": "[variables('vNetSubnetAddressPrefix')]",
+                "addressPrefix": "[parameters('vNetSubnetAddressPrefix')]",
                 "privateEndpointNetworkPolicies": "Enabled",
                 "privateLinkServiceNetworkPolicies": "Enabled",
                 "networkSecurityGroup": {
@@ -289,7 +314,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('publicIPAddressName'),copyIndex(1)))]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vNetName'), 'default')]"
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vNetName'), parameters('vNetSubnetName'))]"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -302,7 +327,7 @@
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('publicIPAddressName'),copyIndex(1)))]"
                             },
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vNetName'), 'default')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vNetName'), parameters('vNetSubnetName'))]"
                             },
                             "primary": true,
                             "privateIPAddressVersion": "IPv4"
