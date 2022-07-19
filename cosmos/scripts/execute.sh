@@ -172,7 +172,7 @@ if [ $MACHINE_INDEX -eq 1 ]; then
   new_storage_url="$url_first_part$regex_to_append$url_second_part"
   aggregation_dir="$Home/aggregation"
   sudo azcopy copy $new_storage_url $aggregation_dir --recursive=true 
-  sudo python3 /tmp/ycsb/$YCSB_FOLDER_NAME/aggregate_multiple_file_results.py $HOME/aggregation
+  sudo python3 /tmp/ycsb/$YCSB_FOLDER_NAME/aggregate_multiple_file_results.py $aggregation_dir
   sudo azcopy copy aggregation.csv "$result_storage_url"
 
   #Updating table entry to change JobStatus to 'Finished' and increment NoOfClientsCompleted
