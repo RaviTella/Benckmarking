@@ -50,13 +50,15 @@ cp -r ./azurecosmos/target/ycsb-azurecosmos-binding*.tar.gz /tmp/ycsb
 cp -r ./azurecosmos/conf/* /tmp/ycsb
 cd /tmp/ycsb/
 
+YCSB_FOLDER_NAME=ycsb-azurecosmos-binding-*-SNAPSHOT
+
 echo "########## Extracting YCSB ##########"
-tar xfvz ycsb-azurecosmos-binding-0.18.0-SNAPSHOT.tar.gz
-cp ./run.sh ./ycsb-azurecosmos-binding-0.18.0-SNAPSHOT
-cp ./azurecosmos.properties ./ycsb-azurecosmos-binding-0.18.0-SNAPSHOT
-cp ./aggregate_multiple_file_results.py ./ycsb-azurecosmos-binding-0.18.0-SNAPSHOT
-cp ./converting_log_to_csv.py ./ycsb-azurecosmos-binding-0.18.0-SNAPSHOT
-cd ./ycsb-azurecosmos-binding-0.18.0-SNAPSHOT
+tar xfvz ycsb-azurecosmos-binding*.tar.gz
+cp ./run.sh ./$YCSB_FOLDER_NAME
+cp ./azurecosmos.properties ./$YCSB_FOLDER_NAME
+cp ./aggregate_multiple_file_results.py ./$YCSB_FOLDER_NAME
+cp ./converting_log_to_csv.py ./$YCSB_FOLDER_NAME
+cd ./$YCSB_FOLDER_NAME
 
 if [ $MACHINE_INDEX -eq 1 ]; then
   table_exist=$(az storage table exists --name "${DEPLOYMENT_NAME}Metadata" --connection-string $RESULT_STORAGE_CONNECTION_STRING | jq '.exists')
@@ -169,7 +171,7 @@ if [ $MACHINE_INDEX -eq 1 ]; then
   url_second_part=$(echo $result_storage_url | cut -c $((index_for_regex))-${#result_storage_url})
   new_storage_url="$url_first_part$regex_to_append$url_second_part"
   sudo azcopy copy $new_storage_url $HOME/aggregation --recursive=true 
-  sudo python3 /tmp/ycsb/ycsb-azurecosmos-binding-0.18.0-SNAPSHOT/aggregate_multiple_file_results.py /home/$ADMIN_USER_NAME/aggregation
+  sudo python3 /tmp/ycsb/$YCSB_FOLDER_NAME/aggregate_multiple_file_results.py $HOME/aggregation
   sudo azcopy copy aggregation.csv "$result_storage_url"
 
   #Updating table entry to change JobStatus to 'Finished' and increment NoOfClientsCompleted
