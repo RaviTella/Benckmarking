@@ -31,6 +31,7 @@ echo "########## Cloning Test Bench repository ##########"
 git clone -b "$BENCHMARKING_TOOLS_BRANCH_NAME" --single-branch "$BENCHMARKING_TOOLS_URL"
 mkdir /tmp/ycsb
 cp -r ./Benckmarking/cosmos/scripts/* /tmp/ycsb
+#cp -r ./Benckmarking/core/data/* /tmp/ycsb
 
 #Build YCSB from source
 echo "########## Cloning YCSB repository ##########"
@@ -40,7 +41,7 @@ echo "########## Building YCSB ##########"
 cd YCSB
 mvn -pl site.ycsb:azurecosmos-binding -am clean package
 cp -r ./azurecosmos/target/ycsb-azurecosmos-binding*.tar.gz /tmp/ycsb
-#cp -r ./azurecosmos/conf/* /tmp/ycsb
+cp -r ./azurecosmos/conf/* /tmp/ycsb
 cd /tmp/ycsb/
 
 ycsb_folder_name=ycsb-azurecosmos-binding-*-SNAPSHOT
